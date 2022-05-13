@@ -2,7 +2,7 @@ from mapping_batch import *
 from routes import *
 
 def simulation_wave(y_low, y_high, origin_loc, orders_number, df_orderlines, list_wid, list_dst, list_route, list_ord):
-	''' Simulate of total picking distance with n orders per wave'''
+	'''Simulo il totale della distanza di picking con n orders per wave'''
 	distance_route = 0
 	# Creo le waves
 	df_orderlines, waves_number = orderlines_mapping(df_orderlines, orders_number)
@@ -20,7 +20,7 @@ def simulation_wave(y_low, y_high, origin_loc, orders_number, df_orderlines, lis
 	return list_wid, list_dst, list_route, list_ord, distance_route
 
 def simulate_batch(n1, n2, y_low, y_high, origin_loc, orders_number, df_orderlines):
-	''' Loop with several scenarios of n orders per wave'''
+	''' Loop con diversi scenari di n ordini per wave '''
 	# Liste dei vari risultati
 	list_wid, list_dst, list_route, list_ord = [], [], [], []
 

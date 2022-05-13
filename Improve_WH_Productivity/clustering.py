@@ -31,7 +31,7 @@ def cluster_wave(df, distance_threshold, dist_method, clust_start, df_type):
     if df_type == 'df_mono':
         df['Coord_Cluster'] = df['Coord']
     # Mapping points
-    df_map = pd.DataFrame(df.groupby(['OrderNumber', 'Coord_Cluster'])['SKU'].count()).reset_index() 	# Here we use Coord Cluster
+    df_map = pd.DataFrame(df.groupby(['OrderNumber', 'Coord_Cluster'])['SKU'].count()).reset_index()
     list_coord, list_OrderNumber = np.stack(df_map.Coord_Cluster.apply(lambda t: literal_eval(t)).values), df_map.OrderNumber.values
     # Cluster picking locations
     clust_id = cluster_locations(list_coord, distance_threshold, dist_method, clust_start)
@@ -42,7 +42,7 @@ def cluster_wave(df, distance_threshold, dist_method, clust_start, df_type):
 
 
 def lines_mapping(df, orders_number, wave_start):
-    '''Step 4: Mapping Order lines mapping without clustering '''
+    '''Step 4: Mapping Order lines mapping senza clustering '''
     # Lista dei numeri degli ordini univoci
     list_orders = df.OrderNumber.unique()
     # Dictionnary for mapping
@@ -57,19 +57,19 @@ def lines_mapping(df, orders_number, wave_start):
 
 
 def lines_mapping_clst(df, list_coord, list_OrderNumber, clust_id, orders_number, wave_start):
-    '''Step 4: Mapping Order lines mapping with clustering '''
+    '''Step 4: Mapping Order lines mapping con clustering '''
     # Dictionnary for mapping by cluster
     dict_map = dict(zip(list_OrderNumber, clust_id))
     # Dataframe mapping
     df['ClusterID'] = df['OrderNumber'].map(dict_map)
-    # Order by ID and mapping
+    # Order by ID e mapping
     df = df.sort_values(['ClusterID','OrderNumber'], ascending = True)
     list_orders = list(df.OrderNumber.unique())
-    # Dictionnary for order mapping
+    # Dictionnary per order mapping
     dict_omap = dict(zip(list_orders, [i for i in range(1, len(list_orders))]))
     # Order ID mapping
     df['OrderID'] = df['OrderNumber'].map(dict_omap)
-    # Create Waves: Increment when reaching orders_number or changing cluster
+    # Creo le Waves: Incremento quando raggiungo orders_number o cambio cluster
     df['WaveID'] = wave_start + ((df.OrderID%orders_number == 0) | (df.ClusterID.diff() != 0)).shift(1).fillna(0).cumsum()
 
     wave_max = df.WaveID.max()
@@ -77,14 +77,14 @@ def lines_mapping_clst(df, list_coord, list_OrderNumber, clust_id, orders_number
 
 
 def locations_listing(df_orderlines, wave_id):
-    ''' Step 5: Listing location per Wave of orders'''
+    ''' Step 5: Listing location per Wave di orders'''
 
-    # Filter by wave_id
+    # Filtro wave_id
     df = df_orderlines[df_orderlines.WaveID == wave_id]
-    # Create coordinates listing
-    list_coord = list(df['Coord'].apply(lambda t: literal_eval(t)).values) 	# Here we use Coord for distance
+    # Creo il listing delle coordinates
+    list_coord = list(df['Coord'].apply(lambda t: literal_eval(t)).values)
     list_coord.sort()
-    # Get unique Unique coordinates
+    # Get delle coordinate uniche
     list_coord = list(k for k,_ in itertools.groupby(list_coord))
     n_locs = len(list_coord)
     n_lines = len(df)

@@ -1,7 +1,7 @@
 import pandas as pd
 
 def process_lines(df_orderlines):
-    ''' Processing of dataframe '''
+    ''' Processing del dataframe '''
     # Mapping Order lines
     df_nline = pd.DataFrame(df_orderlines.groupby(['OrderNumber'])['SKU'].count())
 
@@ -20,7 +20,7 @@ def process_lines(df_orderlines):
     return df_mono, df_multi
 
 def monomult_concat(df_mono, df_multi):
-    ''' Concat mono-line and multi-lines orders'''
+    ''' Concateno mono-line and multi-lines orders'''
     # Coordinate originali per il mono
     df_mono['Coord_Cluster'] = df_mono['Coord']
     # Dataframe Concat

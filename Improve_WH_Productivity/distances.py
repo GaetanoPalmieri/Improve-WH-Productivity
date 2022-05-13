@@ -50,7 +50,7 @@ def centroid_mapping(df_multi):
     '''Mapping Centroids'''
     # Mapping multi
     df_multi['Coord'] = df_multi['Coord'].apply(literal_eval)
-    # Raggrupo le coordinate per ordine
+    # Raggruppo le coordinate per ordine
     df_group = pd.DataFrame(df_multi.groupby(['OrderNumber'])['Coord'].apply(list)).reset_index()
     # Calcolo i Centroid
     df_group['Coord_Centroid'] = df_group['Coord'].apply(centroid)

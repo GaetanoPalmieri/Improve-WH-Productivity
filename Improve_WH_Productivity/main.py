@@ -6,38 +6,37 @@ from simulation_cluster import (simulation_cluster)
 from plot import (plot_simulation1, plot_simulation2)
 import streamlit as st
 
-# Set page configuration
+# Set page di config
 st.set_page_config(page_title="Improve Warehouse Productivity using Order Batching",initial_sidebar_state="expanded",layout='wide')
 
-# Set up the page
+# Set up page
 @st.cache(persist=False,allow_output_mutation=True,suppress_st_warning=True,show_spinner=True)
 
-# Preparation of data
+# Preparazione dei dati
 def load(filename, n):
     df_orderlines = pd.read_csv(IN + filename).head(n)
     return df_orderlines
 
-# Alley Coordinates on y-axis
+# Allineo le coordinate su y-axis
 y_low, y_high = 5.5, 50
 
-# Origin Location
+# Location di origine
 origin_loc = [0, y_low]
 
-# Distance Threshold (m)
+# Distanza di Threshold (m)
 distance_threshold = 35
 distance_list = [1] + [i for i in range(5, 100, 5)]
 IN = 'static/in/'
 
-# Store Results by WaveID
+# Conservo i risultati per WaveID
 list_wid, list_dst, list_route, list_ord, list_lines, list_pcs, list_monomult = [], [], [], [], [], [], []
 list_results = [list_wid, list_dst, list_route, list_ord, list_lines, list_pcs, list_monomult]  # Group in list
 
-# Store Results by Simulation (Order_number)
+# Conservo i risultati per la Simulation (Order_number)
 list_ordnum, list_dstw = [], []
 
 # Simulation 1: Order Batch
 
-# SCOPE SIZE
 st.header("**Impatto della wave size negli ordini (Orders/Wave)**")
 st.subheader(''' Quante Orders Lines vuoi includere nella tua analisi? ''')
 col1, col2 = st.columns(2)
@@ -61,33 +60,33 @@ with col_11:
 with col_22:
     st.write('''[N_MIN, N_MAX] = [{:,}, {:,}]'''.format(n1, n2))
 
-# START CALCULATION
+# START
 start_1 = False
 if st.checkbox('SIMULATION 1: START', key='show', value=False):
     start_1 = True
-# Calculation
+
+# Calcolo
 if start_1:
     df_orderlines = load('df_lines.csv', lines_number)
     df_waves, df_results = simulate_batch(n1, n2, y_low, y_high, origin_loc, lines_number, df_orderlines)
     plot_simulation1(df_results, lines_number)
 
 # Simulation 2: Order Batch using Spatial Clustering
-# SCOPE SIZE
 st.header("**Impatto del metodo di order batching**")
 st.subheader('''Quante Orders Lines vuoi includere nella tua analisi?''')
 col1, col2 = st.columns(2)
 with col1:
-    n_ = st.slider(
+    n_ = st.slider( s   w
         'SIMULATION 2 (1000 ORDERS)', 1, 200, value=5)
 with col2:
     lines_2 = 1000 * n_
     st.write('''{:,} \
     order lines'''.format(lines_2))
-# START CALCULATION
+# START
 start_2 = False
 if st.checkbox('SIMULATION 2: START ', key='show_2', value=False):
     start_2 = True
-# Calculation
+# Calcolo
 if start_2:
     df_orderlines = load('df_lines.csv', lines_2)
     df_reswave, df_results = simulation_cluster(y_low, y_high, df_orderlines, list_results, n1, n2,

@@ -3,7 +3,7 @@ import plotly.express as px
 import streamlit as st
 
 def plot_simulation1(df_results, lines_number):
-    ''' Plot simulation of batch size'''
+    ''' Plot simulation della size del batch '''
     fig = px.bar(data_frame=df_results,
         width=1200,
         height=600,
